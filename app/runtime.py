@@ -196,7 +196,11 @@ def normalize_keybind_value(value: str) -> str:
     if not candidate:
         return ""
 
-    runtime = ensure_ahk_runtime()
+    try:
+        runtime = ensure_ahk_runtime()
+    except Exception:
+        return candidate
+
     helper_source = """#Requires AutoHotkey v2.0
 value := Trim(A_Args[1])
 cleaned := Trim(value, " {}()")
@@ -264,7 +268,11 @@ def format_keybind_display(value: str) -> str:
     if not candidate:
         return ""
 
-    runtime = ensure_ahk_runtime()
+    try:
+        runtime = ensure_ahk_runtime()
+    except Exception:
+        return candidate.upper()
+
     helper_source = """#Requires AutoHotkey v2.0
 value := Trim(A_Args[1])
 cleaned := Trim(value, " {}()")

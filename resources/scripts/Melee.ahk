@@ -104,8 +104,6 @@ ToggleScript(*) {
         WriteMarker("END")
         ShowStatus("OFF")
         SetTimer(MainLoop, 0)
-        Sleep(1000)
-        Reload()
     }
 }
 

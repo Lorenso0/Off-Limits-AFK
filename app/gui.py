@@ -212,6 +212,10 @@ class ThemedDialog(QDialog):
                 color: {self.colors["text"]};
                 font: 400 {_s(13)}px "Segoe UI";
             }}
+            #timingHint {{
+                color: {self.colors["muted"]};
+                font: 400 {_s(12)}px "Segoe UI";
+            }}
             #timingInput {{
                 background: {self.colors["panel_alt"]};
                 color: {self.colors["text"]};
@@ -1028,6 +1032,11 @@ class OffLimitsWindow(QMainWindow):
         return row
 
     def _build_timing_row(self, timing: TimingDefinition) -> QWidget:
+        container = QWidget()
+        container_layout = QVBoxLayout(container)
+        container_layout.setContentsMargins(0, 0, 0, 0)
+        container_layout.setSpacing(_s(3))
+
         row = QWidget()
         layout = QHBoxLayout(row)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -1065,7 +1074,16 @@ class OffLimitsWindow(QMainWindow):
             layout.addWidget(suffix)
 
         layout.addStretch(1)
-        return row
+        container_layout.addWidget(row)
+
+        if timing.key == "pre_melee_wait":
+            hint = QLabel("If your recoil seems to climb, increase this time.")
+            hint.setObjectName("timingHint")
+            hint.setWordWrap(True)
+            hint.setContentsMargins(_s(138), 0, 0, 0)
+            container_layout.addWidget(hint)
+
+        return container
 
     def _populate_script_menu(self) -> None:
         self.script_menu = None
@@ -2376,6 +2394,10 @@ class OffLimitsWindow(QMainWindow):
             #timingLabel {{
                 color: #f6f3ff;
                 font: 400 {_s(13)}px "Segoe UI";
+            }}
+            #timingHint {{
+                color: #b7abd4;
+                font: 400 {_s(12)}px "Segoe UI";
             }}
             #timingCheckbox {{
                 color: #f6f3ff;

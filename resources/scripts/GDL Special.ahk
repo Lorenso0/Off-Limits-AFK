@@ -11,6 +11,7 @@ global MarkerFilePath := ""
 global HoldLMBTime := 65
 global PostLMBWait := 100
 global PostRMBWait := 100
+global PreMeleeWait := 65
 global ScoreboardToggling := 1
 global VWaitTime := 530
 global ToggleKey := "8"
@@ -23,13 +24,14 @@ ConfigureHotkeys()
 WriteMarker("READY")
 
 ApplyOverrides() {
-    global TargetWindowTitle, MarkerFilePath, HoldLMBTime, PostLMBWait, PostRMBWait, VWaitTime, ScoreboardToggling, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
+    global TargetWindowTitle, MarkerFilePath, HoldLMBTime, PostLMBWait, PostRMBWait, PreMeleeWait, VWaitTime, ScoreboardToggling, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
 
     TargetWindowTitle := ReadStringArg("--target-title", TargetWindowTitle)
     MarkerFilePath := ReadStringArg("--marker-file", MarkerFilePath)
     HoldLMBTime := ReadIntArg("--hold-lmb-time", HoldLMBTime)
     PostLMBWait := ReadIntArg("--post-lmb-wait", PostLMBWait)
     PostRMBWait := ReadIntArg("--post-rmb-wait", PostRMBWait)
+    PreMeleeWait := ReadIntArg("--pre-melee-wait", PreMeleeWait)
     VWaitTime := ReadIntArg("--v-wait-time", VWaitTime)
     ScoreboardToggling := ReadIntArg("--scoreboard-toggling", ScoreboardToggling)
     ToggleKey := NormalizeKeyName(ReadStringArg("--toggle-key", ToggleKey))
@@ -105,8 +107,6 @@ ToggleScript(*) {
     } else {
         WriteMarker("END")
         ShowStatus("OFF")
-        Sleep(1000)
-        Reload()
     }
 }
 
@@ -127,7 +127,7 @@ ClearCursorPopup() {
 }
 
 MainLoop() {
-    global Toggle, HoldLMBTime, PostLMBWait, PostRMBWait, VWaitTime, ScoreboardToggling, ScoreboardKey, MeleeKey
+    global Toggle, HoldLMBTime, PostLMBWait, PostRMBWait, PreMeleeWait, VWaitTime, ScoreboardToggling, ScoreboardKey, MeleeKey
 
     loop {
         if !Toggle {
@@ -151,6 +151,7 @@ MainLoop() {
             Sleep(10)
             SendKey(ScoreboardKey)
         }
+        Sleep(PreMeleeWait)
         SendKey(MeleeKey)
         Sleep(VWaitTime)
     }

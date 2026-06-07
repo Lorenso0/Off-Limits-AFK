@@ -50,8 +50,15 @@
                                         },
                                         {
                                             "key":  "hold_lmb_time",
-                                            "label":  "Hold Left Click",
+                                            "label":  "Hold LMB",
                                             "flag":  "--hold-lmb-time",
+                                            "value":  "65",
+                                            "suffix":  "ms"
+                                        },
+                                        {
+                                            "key":  "pre_melee_wait",
+                                            "label":  "Wait before Melee",
+                                            "flag":  "--pre-melee-wait",
                                             "value":  "65",
                                             "suffix":  "ms"
                                         },
@@ -117,6 +124,10 @@
                                                                           "duration":  10
                                                                       }
                                                                   ]
+                                                    },
+                                                    {
+                                                        "kind":  "wait",
+                                                        "duration_timing":  "pre_melee_wait"
                                                     },
                                                     {
                                                         "kind":  "press",
@@ -186,9 +197,16 @@
                         "timings":  [
                                         {
                                             "key":  "reset_time",
-                                            "label":  "Wait before Melee",
+                                            "label":  "Reset Time",
                                             "flag":  "--reset-time",
-                                            "value":  "800",
+                                            "value":  "900",
+                                            "suffix":  "ms"
+                                        },
+                                        {
+                                            "key":  "pre_melee_wait",
+                                            "label":  "Wait before Melee",
+                                            "flag":  "--pre-melee-wait",
+                                            "value":  "65",
                                             "suffix":  "ms"
                                         },
                                         {
@@ -281,6 +299,10 @@
                                                                   ]
                                                     },
                                                     {
+                                                        "kind":  "wait",
+                                                        "duration_timing":  "pre_melee_wait"
+                                                    },
+                                                    {
                                                         "kind":  "press",
                                                         "action":  "melee",
                                                         "duration":  40
@@ -348,7 +370,7 @@
                         "timings":  [
                                         {
                                             "key":  "reset_time",
-                                            "label":  "Wait before Melee",
+                                            "label":  "Reset Time",
                                             "flag":  "--reset-time",
                                             "value":  "550",
                                             "suffix":  "ms"
@@ -361,6 +383,13 @@
                                             "false_value":  "0",
                                             "control":  "checkbox",
                                             "suffix":  ""
+                                        },
+                                        {
+                                            "key":  "pre_melee_wait",
+                                            "label":  "Wait before Melee",
+                                            "flag":  "--pre-melee-wait",
+                                            "value":  "65",
+                                            "suffix":  "ms"
                                         },
                                         {
                                             "key":  "v_wait_time",
@@ -441,6 +470,10 @@
                                                                           "duration":  10
                                                                       }
                                                                   ]
+                                                    },
+                                                    {
+                                                        "kind":  "wait",
+                                                        "duration_timing":  "pre_melee_wait"
                                                     },
                                                     {
                                                         "kind":  "press",
@@ -609,9 +642,16 @@
                                         },
                                         {
                                             "key":  "hold_lmb_time",
-                                            "label":  "Hold Left Click",
+                                            "label":  "Hold LMB",
                                             "flag":  "--hold-lmb-time",
                                             "value":  "600",
+                                            "suffix":  "ms"
+                                        },
+                                        {
+                                            "key":  "pre_melee_wait",
+                                            "label":  "Wait before Melee",
+                                            "flag":  "--pre-melee-wait",
+                                            "value":  "65",
                                             "suffix":  "ms"
                                         },
                                         {
@@ -678,6 +718,10 @@
                                                                   ]
                                                     },
                                                     {
+                                                        "kind":  "wait",
+                                                        "duration_timing":  "pre_melee_wait"
+                                                    },
+                                                    {
                                                         "kind":  "press",
                                                         "action":  "melee",
                                                         "duration":  40
@@ -740,7 +784,7 @@
                                         },
                                         {
                                             "key":  "hold_lmb_time",
-                                            "label":  "Hold Left Click",
+                                            "label":  "Hold LMB",
                                             "flag":  "--hold-lmb-time",
                                             "value":  "65",
                                             "suffix":  "ms"
@@ -759,6 +803,13 @@
                                             "value":  "100",
                                             "suffix":  "ms",
                                             "column":  "right"
+                                        },
+                                        {
+                                            "key":  "pre_melee_wait",
+                                            "label":  "Wait before Melee",
+                                            "flag":  "--pre-melee-wait",
+                                            "value":  "65",
+                                            "suffix":  "ms"
                                         },
                                         {
                                             "key":  "v_wait_time",
@@ -836,6 +887,10 @@
                                                                           "duration":  10
                                                                       }
                                                                   ]
+                                                    },
+                                                    {
+                                                        "kind":  "wait",
+                                                        "duration_timing":  "pre_melee_wait"
                                                     },
                                                     {
                                                         "kind":  "press",

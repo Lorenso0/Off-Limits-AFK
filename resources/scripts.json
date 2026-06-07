@@ -203,13 +203,6 @@
                                             "suffix":  "ms"
                                         },
                                         {
-                                            "key":  "pre_melee_wait",
-                                            "label":  "Wait before Melee",
-                                            "flag":  "--pre-melee-wait",
-                                            "value":  "100",
-                                            "suffix":  "ms"
-                                        },
-                                        {
                                             "key":  "v_wait_time",
                                             "label":  "Wait after Melee",
                                             "flag":  "--v-wait-time",
@@ -299,10 +292,6 @@
                                                                   ]
                                                     },
                                                     {
-                                                        "kind":  "wait",
-                                                        "duration_timing":  "pre_melee_wait"
-                                                    },
-                                                    {
                                                         "kind":  "press",
                                                         "action":  "melee",
                                                         "duration":  40
@@ -385,13 +374,6 @@
                                             "suffix":  ""
                                         },
                                         {
-                                            "key":  "pre_melee_wait",
-                                            "label":  "Wait before Melee",
-                                            "flag":  "--pre-melee-wait",
-                                            "value":  "100",
-                                            "suffix":  "ms"
-                                        },
-                                        {
                                             "key":  "v_wait_time",
                                             "label":  "Wait after Melee",
                                             "flag":  "--v-wait-time",
@@ -470,10 +452,6 @@
                                                                           "duration":  10
                                                                       }
                                                                   ]
-                                                    },
-                                                    {
-                                                        "kind":  "wait",
-                                                        "duration_timing":  "pre_melee_wait"
                                                     },
                                                     {
                                                         "kind":  "press",

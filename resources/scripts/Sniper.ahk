@@ -8,7 +8,6 @@ global Toggle := false
 global TargetWindowTitle := "ahk_exe cod.exe"
 global MarkerFilePath := ""
 global ResetTime := 900
-global PreMeleeWait := 100
 global VWaitTime := 1550
 global ScoreboardToggling := 1
 global ToggleKey := "8"
@@ -23,12 +22,11 @@ ConfigureHotkeys()
 WriteMarker("READY")
 
 ApplyOverrides() {
-    global TargetWindowTitle, MarkerFilePath, ResetTime, PreMeleeWait, VWaitTime, ScoreboardToggling, ToggleKey, ExitKey, LethalKey, WeaponSwitchKey, ScoreboardKey, MeleeKey
+    global TargetWindowTitle, MarkerFilePath, ResetTime, VWaitTime, ScoreboardToggling, ToggleKey, ExitKey, LethalKey, WeaponSwitchKey, ScoreboardKey, MeleeKey
 
     TargetWindowTitle := ReadStringArg("--target-title", TargetWindowTitle)
     MarkerFilePath := ReadStringArg("--marker-file", MarkerFilePath)
     ResetTime := ReadIntArg("--reset-time", ResetTime)
-    PreMeleeWait := ReadIntArg("--pre-melee-wait", PreMeleeWait)
     VWaitTime := ReadIntArg("--v-wait-time", VWaitTime)
     ScoreboardToggling := ReadIntArg("--scoreboard-toggling", ScoreboardToggling)
     ToggleKey := NormalizeKeyName(ReadStringArg("--toggle-key", ToggleKey))
@@ -126,7 +124,7 @@ ClearCursorPopup() {
 }
 
 MainLoop() {
-    global Toggle, ResetTime, PreMeleeWait, VWaitTime, ScoreboardToggling, LethalKey, WeaponSwitchKey, ScoreboardKey, MeleeKey
+    global Toggle, ResetTime, VWaitTime, ScoreboardToggling, LethalKey, WeaponSwitchKey, ScoreboardKey, MeleeKey
 
     loop {
         if !Toggle {
@@ -150,7 +148,6 @@ MainLoop() {
             SendKey(ScoreboardKey)
             Sleep(10)
         }
-        Sleep(PreMeleeWait)
         SendKey(MeleeKey)
         Sleep(VWaitTime)
     }

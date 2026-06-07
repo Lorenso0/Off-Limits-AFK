@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import time
 import urllib.parse
 import urllib.request
@@ -15,6 +14,7 @@ from .version import APP_VERSION
 GITHUB_REPO = "Lorenso0/OffLimitsAFK"
 GITHUB_BRANCH = "main"
 _RAW_BASE = f"https://raw.githubusercontent.com/{GITHUB_REPO}/{GITHUB_BRANCH}"
+_API_BASE = f"https://api.github.com/repos/{GITHUB_REPO}"
 
 
 def _raw_repo_url(relative_path: str) -> str:
@@ -25,6 +25,11 @@ def _raw_repo_url(relative_path: str) -> str:
 
 def _cache_busted_raw_repo_url(relative_path: str) -> str:
     return f"{_raw_repo_url(relative_path)}?cb={int(time.time())}"
+
+
+def _cache_busted_api_url(path: str) -> str:
+    normalized = path.strip("/")
+    return f"{_API_BASE}/{normalized}?cb={int(time.time())}"
 
 
 @dataclass(slots=True)
@@ -123,16 +128,20 @@ def _write_if_changed(dest: Path, content: bytes, key: str, result: SyncResult) 
 
 def check_app_version() -> tuple[bool, str, str]:
     try:
-        version_text = _download_text(_cache_busted_raw_repo_url("app/version.py"))
+        release_text = _download_text(_cache_busted_api_url("releases/latest"))
     except Exception:
         return False, "", ""
 
-    match = re.search(r'APP_VERSION\s*=\s*["\']([^"\']+)["\']', version_text)
-    if not match:
+    try:
+        release = json.loads(release_text)
+    except json.JSONDecodeError:
         return False, "", ""
 
-    latest_version = match.group(1).strip()
-    release_url = f"https://github.com/{GITHUB_REPO}/releases"
+    latest_version = str(release.get("tag_name", "")).strip()
+    release_url = str(release.get("html_url", "")).strip() or f"https://github.com/{GITHUB_REPO}/releases"
+    if not latest_version:
+        return False, "", ""
+
     return _is_newer_version(latest_version, APP_VERSION), latest_version, release_url
 
 

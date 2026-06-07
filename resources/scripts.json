@@ -59,7 +59,7 @@
                                             "key":  "pre_melee_wait",
                                             "label":  "Wait before Melee",
                                             "flag":  "--pre-melee-wait",
-                                            "value":  "65",
+                                            "value":  "100",
                                             "suffix":  "ms"
                                         },
                                         {
@@ -206,7 +206,7 @@
                                             "key":  "pre_melee_wait",
                                             "label":  "Wait before Melee",
                                             "flag":  "--pre-melee-wait",
-                                            "value":  "65",
+                                            "value":  "100",
                                             "suffix":  "ms"
                                         },
                                         {
@@ -388,7 +388,7 @@
                                             "key":  "pre_melee_wait",
                                             "label":  "Wait before Melee",
                                             "flag":  "--pre-melee-wait",
-                                            "value":  "65",
+                                            "value":  "100",
                                             "suffix":  "ms"
                                         },
                                         {
@@ -651,7 +651,7 @@
                                             "key":  "pre_melee_wait",
                                             "label":  "Wait before Melee",
                                             "flag":  "--pre-melee-wait",
-                                            "value":  "65",
+                                            "value":  "100",
                                             "suffix":  "ms"
                                         },
                                         {
@@ -808,7 +808,7 @@
                                             "key":  "pre_melee_wait",
                                             "label":  "Wait before Melee",
                                             "flag":  "--pre-melee-wait",
-                                            "value":  "65",
+                                            "value":  "100",
                                             "suffix":  "ms"
                                         },
                                         {

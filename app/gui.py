@@ -62,6 +62,7 @@ from .runtime import (
     launch_script,
     managed_runtime_dir,
     normalize_keybind_value,
+    prefs_path,
     project_root,
     resolve_entry,
     resources_root,
@@ -357,6 +358,21 @@ class OffLimitsWindow(QMainWindow):
         self.resize(_s(1460), _s(1120))
         self.setMinimumSize(_s(1360), _s(1080))
 
+        self._prefs = self._load_prefs()
+        saved_w = self._prefs.get("window_width")
+        saved_h = self._prefs.get("window_height")
+        saved_x = self._prefs.get("window_x")
+        saved_y = self._prefs.get("window_y")
+        if saved_w and saved_h:
+            self.resize(max(_s(1360), int(saved_w)), max(_s(1080), int(saved_h)))
+        if saved_x is not None and saved_y is not None:
+            screen = QApplication.primaryScreen()
+            if screen:
+                avail = screen.availableGeometry()
+                x = max(avail.left(), min(int(saved_x), avail.right() - self.width()))
+                y = max(avail.top(), min(int(saved_y), avail.bottom() - self.height()))
+                self.move(x, y)
+
         self.definitions: list[ScriptDefinition] = []
         self._reload_definitions()
         self.global_keybinds = self._build_global_keybinds()
@@ -417,6 +433,11 @@ class OffLimitsWindow(QMainWindow):
         self._refresh_keybind_button_state()
         self._render_perks()
         self._clear_selection()
+        last_id = self._prefs.get("last_selected_script_id")
+        if last_id:
+            restored = next((d for d in self.definitions if d.id == last_id and not d.disabled), None)
+            if restored is not None:
+                self._show_definition(restored)
         self._start_sync()
 
     def _show_popup(self, level: str, title: str, message: str) -> None:
@@ -1046,6 +1067,9 @@ class OffLimitsWindow(QMainWindow):
             checkbox = QCheckBox(timing.label)
             checkbox.setObjectName("timingCheckbox")
             checkbox.setChecked(timing.value.lower() in {"1", "true", "yes", "on"})
+            if timing.key == "background_input":
+                checkbox.setToolTip("Experimental: tries to send inputs to the target window while it is not focused. Some games may ignore this or require running the launcher as admin.")
+                checkbox.toggled.connect(lambda checked: self._on_background_input_toggled(checked))
             checkbox.toggled.connect(lambda _checked, control=checkbox, key=timing.key: self._on_timing_control_edited(control, key))
             checkbox.setMinimumWidth(_s(170))
             layout.addStretch(1)
@@ -1298,8 +1322,15 @@ class OffLimitsWindow(QMainWindow):
         menu.setObjectName("scriptMenu")
         menu.setMinimumWidth(self.game_button.width())
         for definition in self.definitions:
-            action = QAction(definition.name, self)
-            action.triggered.connect(lambda checked=False, item=definition: self._show_definition(item))
+            if definition.disabled:
+                action = QAction(f"{definition.name}  (Temporarily Unavailable)", self)
+                font = action.font()
+                font.setItalic(True)
+                action.setFont(font)
+                action.triggered.connect(lambda _checked=False, item=definition: self._on_disabled_script_clicked(item))
+            else:
+                action = QAction(definition.name, self)
+                action.triggered.connect(lambda _checked=False, item=definition: self._show_definition(item))
             menu.addAction(action)
 
         self.script_menu = menu
@@ -1339,6 +1370,8 @@ class OffLimitsWindow(QMainWindow):
             self.running_definition = None
 
         self.selected = definition
+        self._prefs["last_selected_script_id"] = definition.id
+        self._save_prefs()
         self.selected_options_dirty = False
         self.game_button.setText(definition.name)
         self.selected_script_label.setText(f"Selected Script: {definition.name}")
@@ -1894,7 +1927,7 @@ class OffLimitsWindow(QMainWindow):
             if isinstance(control, QLineEdit):
                 option_overrides[key] = control.text().strip()
             elif isinstance(control, QCheckBox):
-                option_overrides[key] = timing.value if control.isChecked() else timing.false_value
+                option_overrides[key] = timing.true_value if control.isChecked() else timing.false_value
         for keybind in self.selected.keybinds:
             option_overrides[keybind.key] = keybind.value
         return option_overrides
@@ -1909,7 +1942,7 @@ class OffLimitsWindow(QMainWindow):
         if isinstance(control, QLineEdit):
             return control.text().strip()
         if isinstance(control, QCheckBox):
-            return timing.value if control.isChecked() else timing.false_value
+            return timing.true_value if control.isChecked() else timing.false_value
         return ""
 
     def _dirty_option_keys(self) -> list[str]:
@@ -2022,6 +2055,84 @@ class OffLimitsWindow(QMainWindow):
                 errors.append(f"{timing.label} must be a whole number.")
 
         return errors
+
+    def _load_prefs(self) -> dict:
+        path = prefs_path()
+        if not path.exists():
+            return {}
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            return raw if isinstance(raw, dict) else {}
+        except Exception:
+            return {}
+
+    def _save_prefs(self) -> None:
+        path = prefs_path()
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(self._prefs, indent=2) + "\n", encoding="utf-8")
+        except Exception:
+            pass
+
+    def _on_disabled_script_clicked(self, definition: ScriptDefinition) -> None:
+        self._show_popup(
+            "info",
+            "Script Unavailable",
+            f"{definition.name} is currently disabled and not available for use.",
+        )
+
+    def _on_background_input_toggled(self, checked: bool) -> None:
+        if not checked:
+            return
+        if self._prefs.get("suppress_background_input_warning"):
+            return
+
+        dialog = ThemedDialog("Background Input - Experimental", self.colors, self)
+        dialog.resize(_s(540), _s(380))
+
+        card = QFrame()
+        card.setObjectName("dialogCard")
+        card_layout = QVBoxLayout(card)
+        card_layout.setContentsMargins(_s(14), _s(14), _s(14), _s(14))
+        card_layout.setSpacing(_s(10))
+        dialog.body_layout.addWidget(card)
+
+        badge = QLabel("WARNING")
+        badge.setAlignment(Qt.AlignCenter)
+        badge.setStyleSheet(
+            f"QLabel {{ background: #f59e0b; color: #ffffff; border-radius: {_s(8)}px; "
+            f"padding: {_s(6)}px {_s(10)}px; font: 700 {_s(11)}px 'Segoe UI'; }}"
+        )
+        card_layout.addWidget(badge, 0, Qt.AlignLeft)
+
+        msg = QLabel(
+            "This feature is experimental and may not work correctly on all systems.\n\n"
+            "The Call of Duty window must NOT be in focus when you start the script - "
+            "alt-tab out of the game before pressing your toggle key.\n\n"
+            "If your toggle or exit keys interfere with typing in other apps, remap them "
+            "to keys you do not type with, or disable Scoreboard Toggling.\n\n"
+            "If inputs are not registering, try running the launcher as administrator."
+        )
+        msg.setObjectName("dialogHint")
+        msg.setWordWrap(True)
+        card_layout.addWidget(msg)
+
+        suppress_check = QCheckBox("Don't show this again")
+        suppress_check.setObjectName("timingCheckbox")
+        dialog.body_layout.addWidget(suppress_check)
+
+        buttons = QHBoxLayout()
+        buttons.addStretch(1)
+        ok = QPushButton("OK")
+        ok.setObjectName("dialogSaveButton")
+        ok.clicked.connect(dialog.accept)
+        buttons.addWidget(ok)
+        dialog.body_layout.addLayout(buttons)
+
+        dialog.exec()
+        if suppress_check.isChecked():
+            self._prefs["suppress_background_input_warning"] = True
+            self._save_prefs()
 
     def _on_timing_control_edited(self, _control: QWidget, _key: str) -> None:
         self.selected_options_dirty = bool(self._dirty_option_keys())
@@ -2736,6 +2847,11 @@ class OffLimitsWindow(QMainWindow):
         super().mouseReleaseEvent(event)
 
     def closeEvent(self, event) -> None:  # type: ignore[override]
+        self._prefs["window_x"] = self.frameGeometry().x()
+        self._prefs["window_y"] = self.frameGeometry().y()
+        self._prefs["window_width"] = self.width()
+        self._prefs["window_height"] = self.height()
+        self._save_prefs()
         self._shutdown_scripts()
         self.tester_target.close()
         super().closeEvent(event)

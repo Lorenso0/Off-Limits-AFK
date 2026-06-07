@@ -54,6 +54,10 @@ def keybind_settings_path() -> Path:
     return managed_runtime_dir() / "keybinds.json"
 
 
+def prefs_path() -> Path:
+    return managed_runtime_dir() / "prefs.json"
+
+
 def resolve_entry(entry: str) -> Path:
     entry_path = Path(entry)
     if entry_path.is_absolute():

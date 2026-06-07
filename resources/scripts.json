@@ -45,6 +45,17 @@
                                             "flag":  "--scoreboard-toggling",
                                             "value":  "1",
                                             "false_value":  "0",
+                                            "true_value":  "1",
+                                            "control":  "checkbox",
+                                            "suffix":  ""
+                                        },
+                                        {
+                                            "key":  "background_input",
+                                            "label":  "Background input",
+                                            "flag":  "--background-input",
+                                            "value":  "0",
+                                            "false_value":  "0",
+                                            "true_value":  "1",
                                             "control":  "checkbox",
                                             "suffix":  ""
                                         },
@@ -145,6 +156,7 @@
                     {
                         "id":  "zombies-afk-sniper-scoreboard",
                         "name":  "Sniper",
+                        "disabled":  true,
                         "kind":  "ahk",
                         "entry":  "scripts/Sniper.ahk",
                         "args":  [
@@ -215,6 +227,17 @@
                                             "flag":  "--scoreboard-toggling",
                                             "value":  "1",
                                             "false_value":  "0",
+                                            "true_value":  "1",
+                                            "control":  "checkbox",
+                                            "suffix":  ""
+                                        },
+                                        {
+                                            "key":  "background_input",
+                                            "label":  "Background input",
+                                            "flag":  "--background-input",
+                                            "value":  "0",
+                                            "false_value":  "0",
+                                            "true_value":  "1",
                                             "control":  "checkbox",
                                             "suffix":  ""
                                         }
@@ -307,6 +330,7 @@
                     {
                         "id":  "zombies-afk-m10-breacher-scoreboard",
                         "name":  "M10 Breacher",
+                        "disabled":  true,
                         "kind":  "ahk",
                         "entry":  "scripts/M10 Breacher.ahk",
                         "args":  [
@@ -358,6 +382,20 @@
                                      ],
                         "timings":  [
                                         {
+                                            "key":  "hold_lmb_time",
+                                            "label":  "Hold LMB",
+                                            "flag":  "--hold-lmb-time",
+                                            "value":  "60",
+                                            "suffix":  "ms"
+                                        },
+                                        {
+                                            "key":  "pre_tomahawk_wait",
+                                            "label":  "Wait before Tomahawk",
+                                            "flag":  "--pre-tomahawk-wait",
+                                            "value":  "40",
+                                            "suffix":  "ms"
+                                        },
+                                        {
                                             "key":  "reset_time",
                                             "label":  "Reset Time",
                                             "flag":  "--reset-time",
@@ -370,6 +408,17 @@
                                             "flag":  "--scoreboard-toggling",
                                             "value":  "1",
                                             "false_value":  "0",
+                                            "true_value":  "1",
+                                            "control":  "checkbox",
+                                            "suffix":  ""
+                                        },
+                                        {
+                                            "key":  "background_input",
+                                            "label":  "Background input",
+                                            "flag":  "--background-input",
+                                            "value":  "0",
+                                            "false_value":  "0",
+                                            "true_value":  "1",
                                             "control":  "checkbox",
                                             "suffix":  ""
                                         },
@@ -399,11 +448,11 @@
                                                     {
                                                         "kind":  "press",
                                                         "action":  "fire",
-                                                        "duration":  60
+                                                        "duration_timing":  "hold_lmb_time"
                                                     },
                                                     {
                                                         "kind":  "wait",
-                                                        "duration":  40
+                                                        "duration_timing":  "pre_tomahawk_wait"
                                                     },
                                                     {
                                                         "kind":  "press",
@@ -511,6 +560,17 @@
                                             "flag":  "--scoreboard-toggling",
                                             "value":  "1",
                                             "false_value":  "0",
+                                            "true_value":  "1",
+                                            "control":  "checkbox",
+                                            "suffix":  ""
+                                        },
+                                        {
+                                            "key":  "background_input",
+                                            "label":  "Background input",
+                                            "flag":  "--background-input",
+                                            "value":  "0",
+                                            "false_value":  "0",
+                                            "true_value":  "1",
                                             "control":  "checkbox",
                                             "suffix":  ""
                                         },
@@ -615,6 +675,17 @@
                                             "flag":  "--scoreboard-toggling",
                                             "value":  "1",
                                             "false_value":  "0",
+                                            "true_value":  "1",
+                                            "control":  "checkbox",
+                                            "suffix":  ""
+                                        },
+                                        {
+                                            "key":  "background_input",
+                                            "label":  "Background input",
+                                            "flag":  "--background-input",
+                                            "value":  "0",
+                                            "false_value":  "0",
+                                            "true_value":  "1",
                                             "control":  "checkbox",
                                             "suffix":  ""
                                         },
@@ -757,6 +828,17 @@
                                             "flag":  "--scoreboard-toggling",
                                             "value":  "1",
                                             "false_value":  "0",
+                                            "true_value":  "1",
+                                            "control":  "checkbox",
+                                            "suffix":  ""
+                                        },
+                                        {
+                                            "key":  "background_input",
+                                            "label":  "Background input",
+                                            "flag":  "--background-input",
+                                            "value":  "0",
+                                            "false_value":  "0",
+                                            "true_value":  "1",
                                             "control":  "checkbox",
                                             "suffix":  ""
                                         },

@@ -34,6 +34,7 @@ class TimingDefinition:
     suffix: str
     control: str
     false_value: str
+    true_value: str
     column: str
 
 
@@ -79,6 +80,7 @@ class ScriptDefinition:
     keybinds: list[KeybindDefinition]
     accent: str
     gpc: GpcDefinition | None
+    disabled: bool = False
 
 
 def _parse_perks(items: list[dict]) -> list[PerkDefinition]:
@@ -150,6 +152,7 @@ def _from_json_file(config_path: Path) -> list[ScriptDefinition]:
                 suffix=timing.get("suffix", ""),
                 control=timing.get("control", "number"),
                 false_value=str(timing.get("false_value", "0")),
+                true_value=str(timing.get("true_value", timing.get("value", "1"))),
                 column=timing.get("column", "left"),
             )
             for timing in item.get("timings", [])
@@ -175,6 +178,7 @@ def _from_json_file(config_path: Path) -> list[ScriptDefinition]:
                 keybinds=keybinds,
                 accent=item.get("accent", "#8b5cf6"),
                 gpc=_parse_gpc(item.get("gpc")),
+                disabled=bool(item.get("disabled", False)),
             )
         )
 

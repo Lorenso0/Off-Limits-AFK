@@ -1067,6 +1067,8 @@ class OffLimitsWindow(QMainWindow):
             checkbox = QCheckBox(timing.label)
             checkbox.setObjectName("timingCheckbox")
             checkbox.setChecked(timing.value.lower() in {"1", "true", "yes", "on"})
+            if timing.key == "reticle_mode":
+                checkbox.toggled.connect(lambda checked: self._on_reticle_mode_toggled(checked))
             if timing.key == "background_input":
                 checkbox.setToolTip("Experimental: tries to send inputs to the target window while it is not focused. Some games may ignore this or require running the launcher as admin.")
                 checkbox.toggled.connect(lambda checked: self._on_background_input_toggled(checked))
@@ -1558,8 +1560,10 @@ class OffLimitsWindow(QMainWindow):
         split_layout.addLayout(right_col, 0)
 
         right_rows: list[tuple[QWidget, bool]] = []  # (widget, is_checkbox)
+        timing_widgets: dict[str, QWidget] = {}
         for timing in definition.timings:
             row = self._build_timing_row(timing)
+            timing_widgets[timing.key] = row
             if timing.control == "checkbox":
                 right_rows.append((row, True))
             elif timing.column == "right":
@@ -1579,6 +1583,12 @@ class OffLimitsWindow(QMainWindow):
             right_col.addStretch(1)
         else:
             split_layout.addStretch(1)
+
+        if "ads_wait" in timing_widgets and "reticle_mode" in self.timing_inputs:
+            reticle_cb = self.timing_inputs["reticle_mode"]
+            ads_widget = timing_widgets["ads_wait"]
+            ads_widget.setVisible(reticle_cb.isChecked())
+            reticle_cb.toggled.connect(lambda checked, w=ads_widget: w.setVisible(checked))
 
         self.timing_layout.addWidget(split)
         self._update_dirty_control_states()
@@ -2080,6 +2090,70 @@ class OffLimitsWindow(QMainWindow):
             "Script Unavailable",
             f"{definition.name} is currently disabled and not available for use.",
         )
+
+    def _on_reticle_mode_toggled(self, checked: bool) -> None:
+        v_wait_input = self.timing_inputs.get("v_wait_time")
+        if v_wait_input is not None:
+            v_wait_input.setText("900" if checked else "550")
+            self._on_timing_control_edited(v_wait_input, "v_wait_time")
+
+        if not checked:
+            return
+        if self._prefs.get("suppress_reticle_mode_warning"):
+            return
+
+        ads_value = ""
+        ads_input = self.timing_inputs.get("ads_wait")
+        if ads_input is not None:
+            ads_value = ads_input.text().strip()
+
+        dialog = ThemedDialog("Reticle Mode", self.colors, self)
+        dialog.resize(_s(540), _s(360))
+
+        card = QFrame()
+        card.setObjectName("dialogCard")
+        card_layout = QVBoxLayout(card)
+        card_layout.setContentsMargins(_s(14), _s(14), _s(14), _s(14))
+        card_layout.setSpacing(_s(10))
+        dialog.body_layout.addWidget(card)
+
+        badge = QLabel("INFO")
+        badge.setAlignment(Qt.AlignCenter)
+        badge.setStyleSheet(
+            f"QLabel {{ background: {self.colors['accent']}; color: #ffffff; border-radius: {_s(8)}px; "
+            f"padding: {_s(6)}px {_s(10)}px; font: 700 {_s(11)}px 'Segoe UI'; }}"
+        )
+        card_layout.addWidget(badge, 0, Qt.AlignLeft)
+
+        ads_display = f" ({ads_value} ms)" if ads_value else ""
+        msg = QLabel(
+            "Reticle Mode is intended for reticle unlock challenges. It aims down sight "
+            "before each shot to satisfy the reticle tracking requirement.\n\n"
+            f"Before using this mode, open your weapon details and check the "
+            f"Aim Down Sight Speed stat. The ADS settle time{ads_display} set in the app "
+            f"must be greater than or equal to that value. If it is lower, the script "
+            f"will fire before the ADS animation completes and the reticle kill will not count."
+        )
+        msg.setObjectName("dialogHint")
+        msg.setWordWrap(True)
+        card_layout.addWidget(msg)
+
+        suppress_check = QCheckBox("Don't show this again")
+        suppress_check.setObjectName("timingCheckbox")
+        dialog.body_layout.addWidget(suppress_check)
+
+        buttons = QHBoxLayout()
+        buttons.addStretch(1)
+        ok = QPushButton("OK")
+        ok.setObjectName("dialogSaveButton")
+        ok.clicked.connect(dialog.accept)
+        buttons.addWidget(ok)
+        dialog.body_layout.addLayout(buttons)
+
+        dialog.exec()
+        if suppress_check.isChecked():
+            self._prefs["suppress_reticle_mode_warning"] = True
+            self._save_prefs()
 
     def _on_background_input_toggled(self, checked: bool) -> None:
         if not checked:

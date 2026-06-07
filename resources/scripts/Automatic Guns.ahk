@@ -13,6 +13,8 @@ global MarkerFilePath := ""
 global HoldLMBTime := 65
 global PreMeleeWait := 100
 global VWaitTime := 550
+global ReticleMode := 0
+global AdsWait := 250
 global ScoreboardToggling := 1
 global BackgroundInput := 0
 global ToggleKey := "8"
@@ -25,13 +27,15 @@ ConfigureHotkeys()
 WriteMarker("READY")
 
 ApplyOverrides() {
-    global TargetWindowTitle, MarkerFilePath, HoldLMBTime, PreMeleeWait, VWaitTime, ScoreboardToggling, BackgroundInput, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
+    global TargetWindowTitle, MarkerFilePath, HoldLMBTime, PreMeleeWait, VWaitTime, ReticleMode, AdsWait, ScoreboardToggling, BackgroundInput, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
 
     TargetWindowTitle := ReadStringArg("--target-title", TargetWindowTitle)
     MarkerFilePath := ReadStringArg("--marker-file", MarkerFilePath)
     HoldLMBTime := ReadIntArg("--hold-lmb-time", HoldLMBTime)
     PreMeleeWait := ReadIntArg("--pre-melee-wait", PreMeleeWait)
     VWaitTime := ReadIntArg("--v-wait-time", VWaitTime)
+    ReticleMode := ReadIntArg("--reticle-mode", ReticleMode)
+    AdsWait := ReadIntArg("--ads-wait", AdsWait)
     ScoreboardToggling := ReadIntArg("--scoreboard-toggling", ScoreboardToggling)
     BackgroundInput := ReadIntArg("--background-input", BackgroundInput)
     ToggleKey := NormalizeKeyName(ReadStringArg("--toggle-key", ToggleKey))
@@ -127,6 +131,34 @@ SendMouse(button, state) {
         }
     }
     Send("{" button " " state "}")
+}
+
+SendMouseDown(button) {
+    global BackgroundInput
+    if BackgroundInput {
+        target := ResolveTargetWindow()
+        if target = "" {
+            return
+        }
+        whichButton := button = "LButton" ? "Left" : button = "RButton" ? "Right" : button
+        try ControlClick(BackgroundClickPoint(target), target, "", whichButton, 1, "D NA Pos")
+        return
+    }
+    Send("{" button " down}")
+}
+
+SendMouseUp(button) {
+    global BackgroundInput
+    if BackgroundInput {
+        target := ResolveTargetWindow()
+        if target = "" {
+            return
+        }
+        whichButton := button = "LButton" ? "Left" : button = "RButton" ? "Right" : button
+        try ControlClick(BackgroundClickPoint(target), target, "", whichButton, 1, "U NA Pos")
+        return
+    }
+    Send("{" button " up}")
 }
 
 HoldMouse(button, duration) {
@@ -256,11 +288,16 @@ ClearCursorPopup() {
 }
 
 MainLoop() {
-    global Toggle, HoldLMBTime, PreMeleeWait, VWaitTime, ScoreboardToggling, ScoreboardKey, MeleeKey
+    global Toggle, HoldLMBTime, PreMeleeWait, VWaitTime, ReticleMode, AdsWait, ScoreboardToggling, ScoreboardKey, MeleeKey
 
     loop {
         if !Toggle {
             break
+        }
+
+        if ReticleMode {
+            SendMouseDown("RButton")
+            Sleep(AdsWait)
         }
 
         if UsingBackgroundInput() {
@@ -277,6 +314,10 @@ MainLoop() {
             }
             Sleep(HoldLMBTime)
             SendMouse("LButton", "up")
+        }
+
+        if ReticleMode {
+            SendMouseUp("RButton")
         }
 
         if ScoreboardToggling {

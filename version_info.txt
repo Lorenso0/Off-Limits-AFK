@@ -1,7 +1,7 @@
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 0, 2, 0),
-    prodvers=(1, 0, 2, 0),
+    filevers=(1, 0, 4, 0),
+    prodvers=(1, 0, 4, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -16,10 +16,10 @@ VSVersionInfo(
         [
           StringStruct(u'CompanyName', u'Off Limits'),
           StringStruct(u'FileDescription', u'Off Limits AFK Launcher'),
-          StringStruct(u'FileVersion', u'1.0.2'),
+          StringStruct(u'FileVersion', u'1.0.4'),
           StringStruct(u'InternalName', u'OffLimitsAFK'),
           StringStruct(u'ProductName', u'Off Limits AFK'),
-          StringStruct(u'ProductVersion', u'1.0.2'),
+          StringStruct(u'ProductVersion', u'1.0.4'),
         ]
       )
     ]),

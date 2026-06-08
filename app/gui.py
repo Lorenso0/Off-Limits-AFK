@@ -1078,6 +1078,20 @@ class OffLimitsWindow(QMainWindow):
             layout.addWidget(checkbox, 0, Qt.AlignHCenter)
             layout.addStretch(1)
             self.timing_inputs[timing.key] = checkbox
+
+            if timing.key == "block_input":
+                container = QWidget()
+                container_layout = QVBoxLayout(container)
+                container_layout.setContentsMargins(0, 0, 0, 0)
+                container_layout.setSpacing(_s(3))
+                container_layout.addWidget(row)
+                hint = QLabel("Locks the game window so manual Mouse and Keyboard inputs will not be registered")
+                hint.setWordWrap(True)
+                hint.setAlignment(Qt.AlignCenter)
+                hint.setStyleSheet(f"color: #7c6e9e; font: 400 {_s(10)}px 'Segoe UI';")
+                container_layout.addWidget(hint)
+                return container
+
             return row
 
         label = QLabel(timing.label)
@@ -1590,6 +1604,12 @@ class OffLimitsWindow(QMainWindow):
             ads_widget.setVisible(reticle_cb.isChecked())
             reticle_cb.toggled.connect(lambda checked, w=ads_widget: w.setVisible(checked))
 
+        if "block_input" in timing_widgets and "background_input" in self.timing_inputs:
+            bg_cb = self.timing_inputs["background_input"]
+            block_widget = timing_widgets["block_input"]
+            block_widget.setVisible(bg_cb.isChecked())
+            bg_cb.toggled.connect(lambda checked, w=block_widget: w.setVisible(checked))
+
         self.timing_layout.addWidget(split)
         self._update_dirty_control_states()
 
@@ -1617,7 +1637,9 @@ class OffLimitsWindow(QMainWindow):
             self._refresh_launch_state()
             return
 
-        self._start_selected_script(restart_selected=False)
+        bg_checkbox = self.timing_inputs.get("background_input")
+        bg_extra = ["--auto-start", "1"] if isinstance(bg_checkbox, QCheckBox) and bg_checkbox.isChecked() else []
+        self._start_selected_script(restart_selected=False, extra_args=bg_extra or None)
 
     def _launch_selected_in_tester(self) -> None:
         if self.selected is None:
@@ -2181,10 +2203,9 @@ class OffLimitsWindow(QMainWindow):
 
         msg = QLabel(
             "This feature is experimental and may not work correctly on all systems.\n\n"
-            "The Call of Duty window must NOT be in focus when you start the script - "
-            "alt-tab out of the game before pressing your toggle key.\n\n"
-            "If your toggle or exit keys interfere with typing in other apps, remap them "
-            "to keys you do not type with, or disable Scoreboard Toggling.\n\n"
+            "Use the Start Script button that appears below this checkbox to start and stop the script. "
+            "Your toggle hotkey is disabled in this mode so it stays free for in-game use.\n\n"
+            "The Call of Duty window must NOT be in focus when you start - alt-tab out before clicking Start Script.\n\n"
             "If inputs are not registering, try running the launcher as administrator."
         )
         msg.setObjectName("dialogHint")

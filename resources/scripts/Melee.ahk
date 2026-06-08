@@ -15,6 +15,9 @@ global VDelay := 130
 global VDelayRnd := 79
 global ScoreboardToggling := 1
 global BackgroundInput := 0
+global MouseBlocker := 0
+global AutoStart := 0
+global BlockOverlayBlocker := 0
 global ToggleKey := "8"
 global ExitKey := "F2"
 global ScoreboardKey := "sc029"
@@ -23,9 +26,12 @@ global MeleeKey := "v"
 ApplyOverrides()
 ConfigureHotkeys()
 WriteMarker("READY")
+if AutoStart {
+    ToggleScript()
+}
 
 ApplyOverrides() {
-    global TargetWindowTitle, MarkerFilePath, VDelay, VDelayRnd, ScoreboardToggling, BackgroundInput, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
+    global TargetWindowTitle, MarkerFilePath, VDelay, VDelayRnd, ScoreboardToggling, BackgroundInput, MouseBlocker, AutoStart, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
 
     TargetWindowTitle := ReadStringArg("--target-title", TargetWindowTitle)
     MarkerFilePath := ReadStringArg("--marker-file", MarkerFilePath)
@@ -33,6 +39,8 @@ ApplyOverrides() {
     VDelayRnd := ReadIntArg("--v-delay-random", VDelayRnd)
     ScoreboardToggling := ReadIntArg("--scoreboard-toggling", ScoreboardToggling)
     BackgroundInput := ReadIntArg("--background-input", BackgroundInput)
+    MouseBlocker := ReadIntArg("--block-input", MouseBlocker)
+    AutoStart := ReadIntArg("--auto-start", AutoStart)
     ToggleKey := NormalizeKeyName(ReadStringArg("--toggle-key", ToggleKey))
     ExitKey := NormalizeKeyName(ReadStringArg("--exit-key", ExitKey))
     ScoreboardKey := NormalizeKeyName(ReadStringArg("--scoreboard-key", ScoreboardKey))
@@ -43,7 +51,6 @@ ConfigureHotkeys() {
     global TargetWindowTitle, BackgroundInput, ToggleKey, ExitKey
 
     if BackgroundInput {
-        Hotkey(ToggleKey, ToggleScript)
         Hotkey(ExitKey, ExitScript)
         return
     }
@@ -121,17 +128,18 @@ ResolveTargetWindow() {
 }
 
 UpdateBackgroundOverlay(active) {
-    global BackgroundInput
+    global BackgroundInput, MouseBlocker
     if !BackgroundInput {
         return
     }
     if active {
+        label := MouseBlocker ? "[AFK] Script Active  |  Mouse Blocked" : "[AFK] Script Active"
         target := ResolveTargetWindow()
         if target != "" {
             WinGetPos(&wx, &wy, &ww, &wh, target)
-            ToolTip("[AFK] Script Active", wx + 10, wy + 40, 3)
+            ToolTip(label, wx + 10, wy + 40, 3)
         } else {
-            ToolTip("[AFK] Script Active", 10, 40, 3)
+            ToolTip(label, 10, 40, 3)
         }
     } else {
         ToolTip(, , , 3)
@@ -144,6 +152,30 @@ WriteMarker(event) {
         return
     }
     try FileAppend(event . "`n", MarkerFilePath, "UTF-8")
+}
+
+CreateBlockOverlay() {
+    global BackgroundInput, MouseBlocker, BlockOverlayBlocker
+    if !BackgroundInput || !MouseBlocker
+        return
+    target := ResolveTargetWindow()
+    if target = ""
+        return
+    DestroyBlockOverlay()
+    WinGetPos(&wx, &wy, &ww, &wh, target)
+    blocker := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x80000 +E0x8000000")
+    blocker.BackColor := "000000"
+    blocker.Show("x" wx " y" wy " w" ww " h" wh " NoActivate")
+    WinSetTransparent(1, "ahk_id " blocker.Hwnd)
+    BlockOverlayBlocker := blocker
+}
+
+DestroyBlockOverlay() {
+    global BlockOverlayBlocker
+    if BlockOverlayBlocker {
+        BlockOverlayBlocker.Destroy()
+        BlockOverlayBlocker := 0
+    }
 }
 
 ToggleScript(*) {
@@ -159,11 +191,13 @@ ToggleScript(*) {
         WriteMarker("START")
         ShowStatus("ON")
         UpdateBackgroundOverlay(true)
+        CreateBlockOverlay()
         SetTimer(MainLoop, -1)
     } else {
         WriteMarker("END")
         ShowStatus("OFF")
         UpdateBackgroundOverlay(false)
+        DestroyBlockOverlay()
         SetTimer(MainLoop, 0)
     }
 }
@@ -173,6 +207,7 @@ ExitScript(*) {
 
     WriteMarker("EXIT")
     UpdateBackgroundOverlay(false)
+    DestroyBlockOverlay()
     ExitApp()
 }
 

@@ -104,6 +104,10 @@ SendKey(value) {
         if target = "" {
             return
         }
+        if WinActive(target) {
+            Send(key)
+            return
+        }
         try {
             ControlSend(key, , target)
             return
@@ -133,7 +137,7 @@ UpdateBackgroundOverlay(active) {
         return
     }
     if active {
-        label := MouseBlocker ? "[AFK] Script Active  |  Mouse Blocked" : "[AFK] Script Active"
+        label := MouseBlocker ? "[AFK] Script Active  |  Inputs Blocked" : "[AFK] Script Active"
         target := ResolveTargetWindow()
         if target != "" {
             WinGetPos(&wx, &wy, &ww, &wh, target)

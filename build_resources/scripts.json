@@ -1,0 +1,1053 @@
+{
+    "scripts": [
+        {
+            "id": "zombies-afk-automatic-guns",
+            "name": "Automatic Guns",
+            "kind": "ahk",
+            "entry": "scripts/Automatic Guns.ahk",
+            "args": [],
+            "keybinds": [
+                {
+                    "key": "toggle_key",
+                    "label": "Toggle Script",
+                    "flag": "--toggle-key",
+                    "value": "8",
+                    "placeholder": "8"
+                },
+                {
+                    "key": "exit_key",
+                    "label": "Exit Script",
+                    "flag": "--exit-key",
+                    "value": "F2",
+                    "placeholder": "F2"
+                },
+                {
+                    "key": "scoreboard_key",
+                    "label": "Scoreboard Toggle",
+                    "flag": "--scoreboard-key",
+                    "value": "sc029",
+                    "placeholder": "sc029"
+                },
+                {
+                    "key": "melee_key",
+                    "label": "Melee",
+                    "flag": "--melee-key",
+                    "value": "v",
+                    "placeholder": "v"
+                }
+            ],
+            "timings": [
+                {
+                    "key": "reticle_mode",
+                    "label": "Reticle mode",
+                    "flag": "--reticle-mode",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "scoreboard_toggling",
+                    "label": "Scoreboard toggling",
+                    "flag": "--scoreboard-toggling",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "background_input",
+                    "label": "Background input",
+                    "flag": "--background-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "block_input",
+                    "label": "Block inputs",
+                    "flag": "--block-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "ads_wait",
+                    "label": "ADS settle time",
+                    "flag": "--ads-wait",
+                    "value": "250",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "hold_lmb_time",
+                    "label": "Hold LMB",
+                    "flag": "--hold-lmb-time",
+                    "value": "65",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "pre_melee_wait",
+                    "label": "Wait before Melee",
+                    "flag": "--pre-melee-wait",
+                    "value": "100",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "v_wait_time",
+                    "label": "Wait after Melee",
+                    "flag": "--v-wait-time",
+                    "value": "550",
+                    "suffix": "ms"
+                }
+            ],
+            "gpc": {
+                "supported": true,
+                "target": "cronus_zen",
+                "required_actions": [
+                    "fire",
+                    "ads",
+                    "melee",
+                    "scoreboard"
+                ],
+                "default_toggle": "view_share_up_down",
+                "notes": [],
+                "actions": [
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "reticle_mode",
+                        "steps": [
+                            {
+                                "kind": "set",
+                                "action": "ads"
+                            },
+                            {
+                                "kind": "wait",
+                                "duration_timing": "ads_wait"
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "set",
+                        "action": "fire"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "hold_lmb_time"
+                    },
+                    {
+                        "kind": "release",
+                        "action": "fire"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "reticle_mode",
+                        "steps": [
+                            {
+                                "kind": "release",
+                                "action": "ads"
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "pre_melee_wait"
+                    },
+                    {
+                        "kind": "press",
+                        "action": "melee",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "v_wait_time"
+                    }
+                ]
+            },
+            "accent": "#6d28d9"
+        },
+        {
+            "id": "zombies-afk-sniper-scoreboard",
+            "name": "Sniper",
+            "disabled": true,
+            "kind": "ahk",
+            "entry": "scripts/Sniper.ahk",
+            "args": [],
+            "keybinds": [
+                {
+                    "key": "toggle_key",
+                    "label": "Toggle Script",
+                    "flag": "--toggle-key",
+                    "value": "8",
+                    "placeholder": "8"
+                },
+                {
+                    "key": "exit_key",
+                    "label": "Exit Script",
+                    "flag": "--exit-key",
+                    "value": "F2",
+                    "placeholder": "F2"
+                },
+                {
+                    "key": "lethal_key",
+                    "label": "Lethal Equipment",
+                    "flag": "--lethal-key",
+                    "value": "g",
+                    "placeholder": "g"
+                },
+                {
+                    "key": "weapon_switch_key",
+                    "label": "Weapon Switch",
+                    "flag": "--weapon-switch-key",
+                    "value": "1",
+                    "placeholder": "1"
+                },
+                {
+                    "key": "scoreboard_key",
+                    "label": "Scoreboard Toggle",
+                    "flag": "--scoreboard-key",
+                    "value": "sc029",
+                    "placeholder": "sc029"
+                },
+                {
+                    "key": "melee_key",
+                    "label": "Melee",
+                    "flag": "--melee-key",
+                    "value": "v",
+                    "placeholder": "v"
+                }
+            ],
+            "timings": [
+                {
+                    "key": "reset_time",
+                    "label": "Reset Time",
+                    "flag": "--reset-time",
+                    "value": "900",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "v_wait_time",
+                    "label": "Wait after Melee",
+                    "flag": "--v-wait-time",
+                    "value": "1550",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "scoreboard_toggling",
+                    "label": "Scoreboard toggling",
+                    "flag": "--scoreboard-toggling",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "background_input",
+                    "label": "Background input",
+                    "flag": "--background-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "block_input",
+                    "label": "Block inputs",
+                    "flag": "--block-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                }
+            ],
+            "gpc": {
+                "supported": true,
+                "target": "cronus_zen",
+                "required_actions": [
+                    "fire",
+                    "lethal",
+                    "weapon_switch",
+                    "melee",
+                    "scoreboard"
+                ],
+                "default_toggle": "view_share_up_down",
+                "notes": [
+                    "This export mirrors the launcher timing sequence and uses controller mappings rather than the raw AHK keys."
+                ],
+                "actions": [
+                    {
+                        "kind": "press",
+                        "action": "fire",
+                        "duration": 60
+                    },
+                    {
+                        "kind": "wait",
+                        "duration": 20
+                    },
+                    {
+                        "kind": "press",
+                        "action": "lethal",
+                        "duration": 60
+                    },
+                    {
+                        "kind": "wait",
+                        "duration": 60
+                    },
+                    {
+                        "kind": "press",
+                        "action": "weapon_switch",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "reset_time"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "press",
+                        "action": "melee",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "v_wait_time"
+                    }
+                ]
+            },
+            "accent": "#a855f7"
+        },
+        {
+            "id": "zombies-afk-m10-breacher-scoreboard",
+            "name": "M10 Breacher",
+            "disabled": true,
+            "kind": "ahk",
+            "entry": "scripts/M10 Breacher.ahk",
+            "args": [],
+            "keybinds": [
+                {
+                    "key": "toggle_key",
+                    "label": "Toggle Script",
+                    "flag": "--toggle-key",
+                    "value": "8",
+                    "placeholder": "8"
+                },
+                {
+                    "key": "exit_key",
+                    "label": "Exit Script",
+                    "flag": "--exit-key",
+                    "value": "F2",
+                    "placeholder": "F2"
+                },
+                {
+                    "key": "lethal_key",
+                    "label": "Lethal Equipment",
+                    "flag": "--lethal-key",
+                    "value": "g",
+                    "placeholder": "g"
+                },
+                {
+                    "key": "weapon_switch_key",
+                    "label": "Weapon Switch",
+                    "flag": "--weapon-switch-key",
+                    "value": "1",
+                    "placeholder": "1"
+                },
+                {
+                    "key": "scoreboard_key",
+                    "label": "Scoreboard Toggle",
+                    "flag": "--scoreboard-key",
+                    "value": "sc029",
+                    "placeholder": "sc029"
+                },
+                {
+                    "key": "melee_key",
+                    "label": "Melee",
+                    "flag": "--melee-key",
+                    "value": "v",
+                    "placeholder": "v"
+                }
+            ],
+            "timings": [
+                {
+                    "key": "hold_lmb_time",
+                    "label": "Hold LMB",
+                    "flag": "--hold-lmb-time",
+                    "value": "60",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "pre_tomahawk_wait",
+                    "label": "Wait before Tomahawk",
+                    "flag": "--pre-tomahawk-wait",
+                    "value": "40",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "reset_time",
+                    "label": "Reset Time",
+                    "flag": "--reset-time",
+                    "value": "550",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "scoreboard_toggling",
+                    "label": "Scoreboard toggling",
+                    "flag": "--scoreboard-toggling",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "background_input",
+                    "label": "Background input",
+                    "flag": "--background-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "block_input",
+                    "label": "Block inputs",
+                    "flag": "--block-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "v_wait_time",
+                    "label": "Wait after Melee",
+                    "flag": "--v-wait-time",
+                    "value": "1600",
+                    "suffix": "ms"
+                }
+            ],
+            "gpc": {
+                "supported": true,
+                "target": "cronus_zen",
+                "required_actions": [
+                    "fire",
+                    "lethal",
+                    "weapon_switch",
+                    "melee",
+                    "scoreboard"
+                ],
+                "default_toggle": "view_share_up_down",
+                "notes": [],
+                "actions": [
+                    {
+                        "kind": "press",
+                        "action": "fire",
+                        "duration_timing": "hold_lmb_time"
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "pre_tomahawk_wait"
+                    },
+                    {
+                        "kind": "press",
+                        "action": "lethal",
+                        "duration": 60
+                    },
+                    {
+                        "kind": "wait",
+                        "duration": 60
+                    },
+                    {
+                        "kind": "press",
+                        "action": "weapon_switch",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "reset_time"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "press",
+                        "action": "melee",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "v_wait_time"
+                    }
+                ]
+            },
+            "accent": "#9333ea"
+        },
+        {
+            "id": "zombies-afk-melee-only",
+            "name": "Melee",
+            "kind": "ahk",
+            "entry": "scripts/Melee.ahk",
+            "args": [],
+            "keybinds": [
+                {
+                    "key": "toggle_key",
+                    "label": "Toggle Script",
+                    "flag": "--toggle-key",
+                    "value": "8",
+                    "placeholder": "8"
+                },
+                {
+                    "key": "exit_key",
+                    "label": "Exit Script",
+                    "flag": "--exit-key",
+                    "value": "F2",
+                    "placeholder": "F2"
+                },
+                {
+                    "key": "scoreboard_key",
+                    "label": "Scoreboard Toggle",
+                    "flag": "--scoreboard-key",
+                    "value": "sc029",
+                    "placeholder": "sc029"
+                },
+                {
+                    "key": "melee_key",
+                    "label": "Melee",
+                    "flag": "--melee-key",
+                    "value": "v",
+                    "placeholder": "v"
+                }
+            ],
+            "timings": [
+                {
+                    "key": "scoreboard_toggling",
+                    "label": "Scoreboard toggling",
+                    "flag": "--scoreboard-toggling",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "background_input",
+                    "label": "Background input",
+                    "flag": "--background-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "block_input",
+                    "label": "Block inputs",
+                    "flag": "--block-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "v_delay",
+                    "label": "Base melee delay",
+                    "flag": "--v-delay",
+                    "value": "130",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "v_delay_random",
+                    "label": "Extra random delay",
+                    "flag": "--v-delay-random",
+                    "value": "79",
+                    "suffix": "ms"
+                }
+            ],
+            "gpc": {
+                "supported": true,
+                "target": "cronus_zen",
+                "required_actions": [
+                    "melee",
+                    "scoreboard"
+                ],
+                "default_toggle": "view_share_up_down",
+                "notes": [
+                    "The exporter preserves randomized melee delay using the current base and random timing values."
+                ],
+                "actions": [
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "press",
+                        "action": "melee",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "v_delay",
+                        "random_timing": "v_delay_random"
+                    }
+                ]
+            },
+            "accent": "#8b5cf6"
+        },
+        {
+            "id": "zombies-afk-launchers",
+            "name": "Launcher",
+            "kind": "ahk",
+            "entry": "scripts/Launchers.ahk",
+            "args": [],
+            "keybinds": [
+                {
+                    "key": "toggle_key",
+                    "label": "Toggle Script",
+                    "flag": "--toggle-key",
+                    "value": "8",
+                    "placeholder": "8"
+                },
+                {
+                    "key": "exit_key",
+                    "label": "Exit Script",
+                    "flag": "--exit-key",
+                    "value": "F2",
+                    "placeholder": "F2"
+                },
+                {
+                    "key": "scoreboard_key",
+                    "label": "Scoreboard Toggle",
+                    "flag": "--scoreboard-key",
+                    "value": "sc029",
+                    "placeholder": "sc029"
+                },
+                {
+                    "key": "melee_key",
+                    "label": "Melee",
+                    "flag": "--melee-key",
+                    "value": "v",
+                    "placeholder": "v"
+                }
+            ],
+            "timings": [
+                {
+                    "key": "scoreboard_toggling",
+                    "label": "Scoreboard toggling",
+                    "flag": "--scoreboard-toggling",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "background_input",
+                    "label": "Background input",
+                    "flag": "--background-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "block_input",
+                    "label": "Block inputs",
+                    "flag": "--block-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_lmb_time",
+                    "label": "Hold LMB",
+                    "flag": "--hold-lmb-time",
+                    "value": "600",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "pre_melee_wait",
+                    "label": "Wait before Melee",
+                    "flag": "--pre-melee-wait",
+                    "value": "100",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "v_wait_time",
+                    "label": "Wait after Melee",
+                    "flag": "--v-wait-time",
+                    "value": "430",
+                    "suffix": "ms"
+                }
+            ],
+            "gpc": {
+                "supported": true,
+                "target": "cronus_zen",
+                "required_actions": [
+                    "fire",
+                    "melee",
+                    "scoreboard"
+                ],
+                "default_toggle": "view_share_up_down",
+                "notes": [],
+                "actions": [
+                    {
+                        "kind": "set",
+                        "action": "fire"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "hold_lmb_time"
+                    },
+                    {
+                        "kind": "release",
+                        "action": "fire"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "pre_melee_wait"
+                    },
+                    {
+                        "kind": "press",
+                        "action": "melee",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "v_wait_time"
+                    }
+                ]
+            },
+            "accent": "#7c3aed"
+        },
+        {
+            "id": "zombies-afk-gdl-special",
+            "name": "GDL",
+            "kind": "ahk",
+            "entry": "scripts/GDL Special.ahk",
+            "args": [],
+            "keybinds": [
+                {
+                    "key": "toggle_key",
+                    "label": "Toggle Script",
+                    "flag": "--toggle-key",
+                    "value": "8",
+                    "placeholder": "8"
+                },
+                {
+                    "key": "exit_key",
+                    "label": "Exit Script",
+                    "flag": "--exit-key",
+                    "value": "F2",
+                    "placeholder": "F2"
+                },
+                {
+                    "key": "scoreboard_key",
+                    "label": "Scoreboard Toggle",
+                    "flag": "--scoreboard-key",
+                    "value": "sc029",
+                    "placeholder": "sc029"
+                },
+                {
+                    "key": "melee_key",
+                    "label": "Melee",
+                    "flag": "--melee-key",
+                    "value": "v",
+                    "placeholder": "v"
+                }
+            ],
+            "timings": [
+                {
+                    "key": "scoreboard_toggling",
+                    "label": "Scoreboard toggling",
+                    "flag": "--scoreboard-toggling",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "background_input",
+                    "label": "Background input",
+                    "flag": "--background-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "block_input",
+                    "label": "Block inputs",
+                    "flag": "--block-input",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_lmb_time",
+                    "label": "Hold LMB",
+                    "flag": "--hold-lmb-time",
+                    "value": "65",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "post_lmb_wait",
+                    "label": "Wait after Left Click",
+                    "flag": "--post-lmb-wait",
+                    "value": "100",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "post_rmb_wait",
+                    "label": "Wait after Right Click",
+                    "flag": "--post-rmb-wait",
+                    "value": "100",
+                    "suffix": "ms",
+                    "column": "right"
+                },
+                {
+                    "key": "pre_melee_wait",
+                    "label": "Wait before Melee",
+                    "flag": "--pre-melee-wait",
+                    "value": "100",
+                    "suffix": "ms"
+                },
+                {
+                    "key": "v_wait_time",
+                    "label": "Wait after Melee",
+                    "flag": "--v-wait-time",
+                    "value": "530",
+                    "suffix": "ms"
+                }
+            ],
+            "gpc": {
+                "supported": true,
+                "target": "cronus_zen",
+                "required_actions": [
+                    "fire",
+                    "ads",
+                    "melee",
+                    "scoreboard"
+                ],
+                "default_toggle": "view_share_up_down",
+                "notes": [
+                    "ADS is mapped through the platform preset and exported as a controller button tap."
+                ],
+                "actions": [
+                    {
+                        "kind": "set",
+                        "action": "fire"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "hold_lmb_time"
+                    },
+                    {
+                        "kind": "release",
+                        "action": "fire"
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "post_lmb_wait"
+                    },
+                    {
+                        "kind": "press",
+                        "action": "ads",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "post_rmb_wait"
+                    },
+                    {
+                        "kind": "conditional",
+                        "condition_timing": "scoreboard_toggling",
+                        "steps": [
+                            {
+                                "kind": "wait",
+                                "duration": 10
+                            },
+                            {
+                                "kind": "press",
+                                "action": "scoreboard",
+                                "duration": 10
+                            }
+                        ]
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "pre_melee_wait"
+                    },
+                    {
+                        "kind": "press",
+                        "action": "melee",
+                        "duration": 40
+                    },
+                    {
+                        "kind": "wait",
+                        "duration_timing": "v_wait_time"
+                    }
+                ]
+            },
+            "accent": "#c084fc"
+        }
+    ]
+}

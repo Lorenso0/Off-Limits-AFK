@@ -8,7 +8,7 @@ xcopy resources\pictures build_resources\pictures /E /I /Y >nul
 python -m pip install --upgrade pyinstaller pillow
 python -c "from PIL import Image; Image.open(r'resources\pictures\appicon.png').save(r'build_resources\appicon.ico', sizes=[(256,256),(128,128),(64,64),(48,48),(32,32),(16,16)])"
 if errorlevel 1 goto :cleanup_fail
-python -m PyInstaller --noconfirm --onefile --windowed --name "OffLimitsAFK" --distpath . --icon "build_resources\appicon.ico" --add-data "build_resources;resources" --version-file "version_info.txt" main.py
+python -m PyInstaller --noconfirm --onefile --windowed --name "OffLimitsAFK" --distpath . --icon "build_resources\appicon.ico" --add-data "build_resources;resources" --add-data "app\frontend;app\frontend" --version-file "version_info.txt" main.py
 if errorlevel 1 goto :cleanup_fail
 
 if exist build rmdir /s /q build

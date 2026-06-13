@@ -10,6 +10,7 @@ from pathlib import Path
 import webview
 
 from .api import Api
+from .runtime import project_root
 
 _WINDOW_TITLE = "Off Limits AFK Scripts"
 _WIDTH = 860
@@ -61,7 +62,7 @@ def _apply_rounded_region() -> None:
 
 def launch() -> None:
     api = Api()
-    html_path = Path(__file__).resolve().parent / "frontend" / "index.html"
+    html_path = project_root() / "app" / "frontend" / "index.html"
     window = webview.create_window(
         _WINDOW_TITLE,
         url=html_path.as_uri(),

@@ -65,6 +65,10 @@ class Api:
         if self._window:
             self._window.destroy()
 
+    def open_url(self, url: str) -> None:
+        import webbrowser
+        webbrowser.open(url)
+
     def get_position(self) -> dict:
         if self._window:
             return {"x": self._window.x, "y": self._window.y}

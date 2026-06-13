@@ -85,8 +85,8 @@ window.onSyncDone = function (scripts, summary, errors, updateInfo) {
   if (errors && errors.length) showModal('warning', 'Sync warning', errors.join('\n'));
   if (updateInfo && updateInfo.available && updateInfo.latest) {
     showModal('info', 'App update available',
-      `A newer launcher version is available.\n\nCurrent: ${updateInfo.current}\nLatest:  ${updateInfo.latest}` +
-      (updateInfo.url ? `\n\nDownload: ${updateInfo.url}` : ''));
+      `A newer launcher version is available.\n\nCurrent: ${updateInfo.current}\nLatest:  ${updateInfo.latest}`,
+      null, updateInfo.url || null);
   }
 };
 
@@ -681,12 +681,23 @@ async function saveKeybinds() {
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
 
-function showModal(level, title, message, suppressKey) {
+function showModal(level, title, message, suppressKey, linkUrl) {
   const badge = $('modal-badge');
   badge.className = 'badge ' + (level === 'error' ? 'badge-error' : level === 'warning' ? 'badge-warn' : 'badge-info');
   badge.textContent = level.toUpperCase();
   $('modal-title-text').textContent = title;
-  $('modal-message').textContent = message;
+  const msgEl = $('modal-message');
+  msgEl.textContent = message;
+  if (linkUrl) {
+    msgEl.appendChild(document.createElement('br'));
+    msgEl.appendChild(document.createElement('br'));
+    const a = document.createElement('a');
+    a.href = linkUrl;
+    a.textContent = 'Download latest version';
+    a.style.cssText = 'color:var(--accent);text-decoration:underline;cursor:pointer;';
+    a.addEventListener('click', e => { e.preventDefault(); pywebview.api.open_url(linkUrl); });
+    msgEl.appendChild(a);
+  }
   state.pendingModal = suppressKey ? { suppressKey } : null;
   $('modal-suppress-check').checked = false;
   setVisible('modal-suppress-wrap', !!suppressKey);

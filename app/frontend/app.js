@@ -308,12 +308,18 @@ function buildTimingRow(t) {
     inputGroup.appendChild(suf);
   }
 
-  if (t.key === 'pre_melee_wait') {
+  const hintText = t.key === 'pre_melee_wait'
+    ? 'If recoil climbs, increase this.'
+    : t.key === 'v_wait_time'
+    ? 'Increase this if your gun does not fire after a melee attack.'
+    : null;
+
+  if (hintText) {
     const labelWrap = document.createElement('div');
     labelWrap.className = 'timing-label-wrap';
     const hint = document.createElement('span');
     hint.className = 'timing-hint';
-    hint.textContent = 'If recoil climbs, increase this.';
+    hint.textContent = hintText;
     labelWrap.append(labelEl, hint);
     row.append(labelWrap, inputGroup);
   } else {

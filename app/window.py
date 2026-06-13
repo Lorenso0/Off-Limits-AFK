@@ -54,13 +54,41 @@ def _apply_rounded_region() -> None:
     if not hwnd:
         return
 
+    rect = ctypes.wintypes.RECT()
+    ctypes.windll.user32.GetWindowRect(hwnd, ctypes.byref(rect))
+    w = rect.right - rect.left
+    h = rect.bottom - rect.top
+
     rgn = ctypes.windll.gdi32.CreateRoundRectRgn(
-        0, 0, _WIDTH + 1, _HEIGHT + 1, diameter, diameter
+        0, 0, w + 1, h + 1, diameter, diameter
     )
     ctypes.windll.user32.SetWindowRgn(hwnd, rgn, True)
 
 
+def _set_dpi_aware() -> None:
+    if os.name != "nt":
+        return
+    # DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 (-4) — best option on Win10 1703+
+    try:
+        ctypes.windll.user32.SetProcessDpiAwarenessContext(ctypes.c_ssize_t(-4))
+        return
+    except Exception:
+        pass
+    # Fallback: PROCESS_PER_MONITOR_DPI_AWARE (2) via shcore
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        return
+    except Exception:
+        pass
+    # Last resort
+    try:
+        ctypes.windll.user32.SetProcessDPIAware()
+    except Exception:
+        pass
+
+
 def launch() -> None:
+    _set_dpi_aware()
     api = Api()
     html_path = project_root() / "app" / "frontend" / "index.html"
     window = webview.create_window(

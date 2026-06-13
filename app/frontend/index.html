@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Off Limits AFK Scripts</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="outer">
+
+    <!-- Titlebar -->
+    <div id="titlebar">
+      <div id="titlebar-drag">
+        <span id="brand-afk">AFK</span>
+        <span id="brand-sep">/</span>
+        <span id="brand-name">Off Limits Scripts</span>
+        <span id="version-badge"></span>
+      </div>
+      <div id="titlebar-actions">
+        <button id="sync-btn" class="title-btn" title="Sync scripts from GitHub">Sync</button>
+        <button class="title-btn" onclick="pywebview.api.minimize_window()">&#x2013;</button>
+        <button class="title-btn danger" onclick="pywebview.api.close_window()">&#x2715;</button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div id="app">
+
+      <!-- Sidebar -->
+      <aside id="sidebar">
+        <div id="script-list"></div>
+        <div id="sidebar-footer">
+          <button id="keybinds-btn" class="keybinds-btn">
+            <span id="keybinds-dot" class="dot dot-warn hidden"></span>
+            Edit Keybinds
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main id="main">
+
+        <!-- No selection -->
+        <div id="welcome">
+          <div class="welcome-icon">&#x2605;</div>
+          <div class="welcome-title">Select a script</div>
+          <div class="welcome-hint">Choose a script from the sidebar to configure and launch it.</div>
+        </div>
+
+        <!-- Script selected -->
+        <div id="detail" class="hidden">
+
+          <!-- Tab bar -->
+          <div id="tab-bar">
+            <button class="tab-btn active" data-tab="configure">Configure</button>
+            <button class="tab-btn" data-tab="setup">Setup</button>
+            <button class="tab-btn" data-tab="loadout">Loadout</button>
+            <div id="dirty-badge" class="badge badge-warn hidden">Unsaved changes</div>
+          </div>
+
+          <!-- Tab panels -->
+          <div id="tab-panels">
+
+            <!-- Configure -->
+            <div id="tab-configure" class="tab-panel">
+              <div class="panel-header">
+                <span id="script-name" class="panel-title"></span>
+                <div id="preset-control" class="hidden">
+                  <div id="preset-dropdown-wrap">
+                    <button id="preset-dropdown-btn" class="preset-dropdown-btn">
+                      <span id="preset-dropdown-label">Presets</span>
+                      <span class="preset-chevron">▾</span>
+                    </button>
+                    <div id="preset-dropdown-menu" class="preset-dropdown-menu hidden">
+                      <div id="preset-menu-list"></div>
+                      <div class="preset-menu-footer">
+                        <input id="preset-name-input" class="preset-name-input" type="text" placeholder="New preset name…" maxlength="40" />
+                        <button id="save-preset-btn" class="preset-menu-save-btn">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                  <button id="update-preset-btn" class="preset-update-btn hidden">Update</button>
+                </div>
+              </div>
+              <div id="timings-wrap"></div>
+              <div id="no-timings" class="muted-hint hidden">No configurable options for this script.</div>
+              <div id="configure-logo-wrap">
+                <img id="configure-logo" alt="" />
+              </div>
+            </div>
+
+            <!-- Setup -->
+            <div id="tab-setup" class="tab-panel hidden">
+              <div id="setup-previews">
+                <button id="setup-img-btn" class="setup-preview-card" title="Click to enlarge">
+                  <img id="setup-image" alt="Setup position" />
+                  <span class="setup-preview-label">Setup Position</span>
+                </button>
+                <button id="tip-img-btn" class="setup-preview-card hidden" title="Click to enlarge">
+                  <img id="tip-image" alt="Tip" />
+                  <span class="setup-preview-label">Door Tip</span>
+                </button>
+              </div>
+              <div id="setup-steps"></div>
+            </div>
+
+            <!-- Loadout -->
+            <div id="tab-loadout" class="tab-panel hidden">
+              <div id="loadout-cols">
+                <div class="loadout-col">
+                  <div class="loadout-label">Required</div>
+                  <div id="perks-required" class="perks-col"></div>
+                </div>
+                <div class="loadout-sep"></div>
+                <div class="loadout-col">
+                  <div class="loadout-label">Recommended</div>
+                  <div id="perks-recommended" class="perks-col"></div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /tab-panels -->
+
+          <!-- Launch bar -->
+          <div id="launch-bar">
+            <button id="launch-btn" class="launch-btn inactive">Launch Selected Script</button>
+          </div>
+
+        </div><!-- /detail -->
+
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+      <span id="status-text" class="status-text">Initializing…</span>
+      <span id="runtime-badge">AHK v2</span>
+      <div id="footer-actions">
+        <button id="export-gpc-btn" class="footer-btn hidden">Export GPC</button>
+        <button id="stop-all-btn" class="footer-btn footer-btn-danger hidden">Stop All</button>
+      </div>
+    </div>
+
+  </div><!-- /outer -->
+
+  <!-- Modal -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal">
+      <div id="modal-titlebar">
+        <span id="modal-badge" class="badge"></span>
+        <span id="modal-title-text"></span>
+        <button id="modal-close" onclick="closeModal()">&#x2715;</button>
+      </div>
+      <div id="modal-body">
+        <p id="modal-message"></p>
+      </div>
+      <div id="modal-footer">
+        <label id="modal-suppress-wrap" class="hidden">
+          <input type="checkbox" id="modal-suppress-check" />
+          <span>Don't show this again</span>
+        </label>
+        <button class="btn-primary" onclick="closeModal()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keybinds dialog -->
+  <div id="kb-overlay" class="hidden">
+    <div id="kb-dialog">
+      <div id="kb-titlebar">
+        <div class="accent-bar"></div>
+        <span class="dialog-title">Global Keybinds</span>
+        <button onclick="closeKeybinds()">&#x2715;</button>
+      </div>
+      <div id="kb-body">
+        <p class="dialog-hint">These keybinds apply to all scripts.</p>
+        <div id="kb-inputs"></div>
+      </div>
+      <div id="kb-footer">
+        <button class="btn-ghost" onclick="closeKeybinds()">Cancel</button>
+        <button class="btn-primary" onclick="saveKeybinds()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image preview -->
+  <div id="preview-overlay" class="hidden" onclick="closePreview()">
+    <img id="preview-img" alt="Preview" />
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

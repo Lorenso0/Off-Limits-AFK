@@ -1,3 +1,3 @@
-from .gui import launch
+from .window import launch
 
 __all__ = ["launch"]

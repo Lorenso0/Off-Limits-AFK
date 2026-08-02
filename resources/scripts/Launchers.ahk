@@ -14,6 +14,12 @@ global HoldLMBTime := 600
 global PreMeleeWait := 100
 global VWaitTime := 430
 global ScoreboardToggling := 1
+global Movement := 0
+global HoldWTime := 400
+global WSWaitTime := 5000
+global LastWSTime := 0
+global MovementBusy := false
+global MovementActive := false
 global BackgroundInput := 0
 global MouseBlocker := 0
 global AutoStart := 0
@@ -31,7 +37,7 @@ if AutoStart {
 }
 
 ApplyOverrides() {
-    global TargetWindowTitle, MarkerFilePath, HoldLMBTime, PreMeleeWait, VWaitTime, ScoreboardToggling, BackgroundInput, MouseBlocker, AutoStart, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
+    global TargetWindowTitle, MarkerFilePath, HoldLMBTime, PreMeleeWait, VWaitTime, ScoreboardToggling, Movement, HoldWTime, BackgroundInput, MouseBlocker, AutoStart, ToggleKey, ExitKey, ScoreboardKey, MeleeKey
 
     TargetWindowTitle := ReadStringArg("--target-title", TargetWindowTitle)
     MarkerFilePath := ReadStringArg("--marker-file", MarkerFilePath)
@@ -39,6 +45,8 @@ ApplyOverrides() {
     PreMeleeWait := ReadIntArg("--pre-melee-wait", PreMeleeWait)
     VWaitTime := ReadIntArg("--v-wait-time", VWaitTime)
     ScoreboardToggling := ReadIntArg("--scoreboard-toggling", ScoreboardToggling)
+    Movement := ReadIntArg("--movement", Movement)
+    HoldWTime := ReadIntArg("--hold-w-time", HoldWTime)
     BackgroundInput := ReadIntArg("--background-input", BackgroundInput)
     MouseBlocker := ReadIntArg("--block-input", MouseBlocker)
     AutoStart := ReadIntArg("--auto-start", AutoStart)
@@ -245,6 +253,49 @@ DestroyBlockOverlay() {
     }
 }
 
+StartMovement() {
+    global Movement, Toggle, LastWSTime, MovementActive
+    if !Movement || !Toggle || MovementActive
+        return
+    MovementActive := true
+    LastWSTime := A_TickCount
+    SendKey("s down")
+    SetTimer(MovementLoop, 50)
+}
+
+StopMovement() {
+    global LastWSTime, MovementActive
+    SetTimer(MovementLoop, 0)
+    if !MovementActive
+        return
+    MovementActive := false
+    SendKey("w up")
+    SendKey("s up")
+    LastWSTime := 0
+}
+
+MovementLoop() {
+    global Movement, Toggle, LastWSTime, HoldWTime, WSWaitTime, MovementBusy
+    if !Toggle || !Movement {
+        StopMovement()
+        return
+    }
+    if MovementBusy || A_TickCount - LastWSTime < WSWaitTime
+        return
+    MovementBusy := true
+    try {
+        SendKey("s up")
+        SendKey("w down")
+        Sleep(HoldWTime)
+        SendKey("w up")
+        if Toggle && Movement
+            SendKey("s down")
+        LastWSTime := A_TickCount
+    } finally {
+        MovementBusy := false
+    }
+}
+
 ToggleScript(*) {
     global Toggle, BackgroundInput
 
@@ -259,11 +310,13 @@ ToggleScript(*) {
         ShowStatus("ON")
         UpdateBackgroundOverlay(true)
         CreateBlockOverlay()
+        StartMovement()
         SetTimer(MainLoop, -1)
     } else {
         WriteMarker("END")
         ShowStatus("OFF")
         UpdateBackgroundOverlay(false)
+        StopMovement()
         DestroyBlockOverlay()
     }
 }
@@ -272,6 +325,7 @@ ExitScript(*) {
     global BackgroundInput
 
     WriteMarker("EXIT")
+    StopMovement()
     UpdateBackgroundOverlay(false)
     DestroyBlockOverlay()
     ExitApp()

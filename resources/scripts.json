@@ -58,6 +58,23 @@
                     "suffix": ""
                 },
                 {
+                    "key": "movement",
+                    "label": "Movement",
+                    "flag": "--movement",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_w_time",
+                    "label": "Movement W hold time",
+                    "flag": "--hold-w-time",
+                    "value": "400",
+                    "suffix": "ms"
+                },
+                {
                     "key": "background_input",
                     "label": "Background input",
                     "flag": "--background-input",
@@ -278,6 +295,23 @@
                     "suffix": ""
                 },
                 {
+                    "key": "movement",
+                    "label": "Movement",
+                    "flag": "--movement",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_w_time",
+                    "label": "Movement W hold time",
+                    "flag": "--hold-w-time",
+                    "value": "400",
+                    "suffix": "ms"
+                },
+                {
                     "key": "background_input",
                     "label": "Background input",
                     "flag": "--background-input",
@@ -467,6 +501,23 @@
                     "suffix": ""
                 },
                 {
+                    "key": "movement",
+                    "label": "Movement",
+                    "flag": "--movement",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_w_time",
+                    "label": "Movement W hold time",
+                    "flag": "--hold-w-time",
+                    "value": "400",
+                    "suffix": "ms"
+                },
+                {
                     "key": "background_input",
                     "label": "Background input",
                     "flag": "--background-input",
@@ -625,6 +676,23 @@
                     "suffix": ""
                 },
                 {
+                    "key": "movement",
+                    "label": "Movement",
+                    "flag": "--movement",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_w_time",
+                    "label": "Movement W hold time",
+                    "flag": "--hold-w-time",
+                    "value": "400",
+                    "suffix": "ms"
+                },
+                {
                     "key": "background_input",
                     "label": "Background input",
                     "flag": "--background-input",
@@ -746,6 +814,23 @@
                     "true_value": "1",
                     "control": "checkbox",
                     "suffix": ""
+                },
+                {
+                    "key": "movement",
+                    "label": "Movement",
+                    "flag": "--movement",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_w_time",
+                    "label": "Movement W hold time",
+                    "flag": "--hold-w-time",
+                    "value": "400",
+                    "suffix": "ms"
                 },
                 {
                     "key": "background_input",
@@ -905,6 +990,23 @@
                     "true_value": "1",
                     "control": "checkbox",
                     "suffix": ""
+                },
+                {
+                    "key": "movement",
+                    "label": "Movement",
+                    "flag": "--movement",
+                    "value": "0",
+                    "false_value": "0",
+                    "true_value": "1",
+                    "control": "checkbox",
+                    "suffix": ""
+                },
+                {
+                    "key": "hold_w_time",
+                    "label": "Movement W hold time",
+                    "flag": "--hold-w-time",
+                    "value": "400",
+                    "suffix": "ms"
                 },
                 {
                     "key": "background_input",

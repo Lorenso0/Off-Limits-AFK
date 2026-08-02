@@ -128,6 +128,28 @@ SendKey(value) {
     Send(key)
 }
 
+SendMovementKey(value) {
+    global BackgroundInput
+    key := FormatSendKey(value)
+    if BackgroundInput {
+        target := ResolveTargetWindow()
+        if target = "" {
+            return
+        }
+        if WinActive(target) {
+            SendEvent(key)
+            return
+        }
+        try {
+            ControlSend(key, , target)
+            return
+        } catch {
+            return
+        }
+    }
+    SendEvent(key)
+}
+
 SendMouse(button, state) {
     global BackgroundInput
     if BackgroundInput {
@@ -255,7 +277,7 @@ StartMovement() {
         return
     MovementActive := true
     LastWSTime := A_TickCount
-    SendKey("s down")
+    SendMovementKey("s down")
     SetTimer(MovementLoop, 50)
 }
 
@@ -265,8 +287,8 @@ StopMovement() {
     if !MovementActive
         return
     MovementActive := false
-    SendKey("w up")
-    SendKey("s up")
+    SendMovementKey("w up")
+    SendMovementKey("s up")
     LastWSTime := 0
 }
 
@@ -280,12 +302,12 @@ MovementLoop() {
         return
     MovementBusy := true
     try {
-        SendKey("s up")
-        SendKey("w down")
+        SendMovementKey("s up")
+        SendMovementKey("w down")
         Sleep(HoldWTime)
-        SendKey("w up")
+        SendMovementKey("w up")
         if Toggle && Movement
-            SendKey("s down")
+            SendMovementKey("s down")
         LastWSTime := A_TickCount
     } finally {
         MovementBusy := false
